@@ -149,9 +149,11 @@ class SalesController extends Controller
             'selectedProducts' => $selectedProducts
         ]);
     }
-    public function destroy(Sale $sale)
+    public function destroy($id)
     {
+        $sale = Sale::findOrFail($id);
         $sale->delete();
-        return response()->json(['message' => 'Venda deletada com sucesso!']);
+
+        return redirect()->route('sales.index')->with('success', 'Venda deletada com sucesso!');
     }
 }
