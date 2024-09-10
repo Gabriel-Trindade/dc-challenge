@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Vendas</title>
-    <!-- Adicione os links e scripts necessários para o Bootstrap -->
+
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -21,7 +21,7 @@
         <h1 class="my-4">Editar Venda</h1>
         <form id="sale-form">
             <section id="sale">
-                <!-- Campos do Formulário de Vendas -->
+  
                 <div class="form-group">
                     <label for="customer">Cliente</label>
                     <select id="customer" class="form-control" name="customer" readonly>
@@ -53,7 +53,7 @@
                             <td>{{ $customer->name }}</td>
                             <td>{{ $customer->cpf }}</td>
                             <td>
-                                <!-- Você pode adicionar botões para editar ou remover o cliente se necessário -->
+           
                                 <button type="button" class="btn btn-danger btn-sm remove-item">Remover cliente</button>
                             </td>
                         </tr>

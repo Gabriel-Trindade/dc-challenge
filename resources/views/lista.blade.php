@@ -18,8 +18,6 @@
     </header>
     <div class="container">
         <h1 class="my-4">Listagem de Vendas</h1>
-
-        <!-- Tabela de Listagem de Vendas -->
         <table class="table table-striped">
             <thead>
                 <tr>

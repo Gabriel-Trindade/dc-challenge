@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Vendas</title>
-    <!-- Adicione os links e scripts necessários para o Bootstrap -->
+
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -21,7 +21,7 @@
         <h1 class="my-4">Criar Venda</h1>
         <form id="sale-form">
             <section id="sale">
-                <!-- Campos do Formulário de Vendas -->
+
                 <div class="form-group">
                     <label for="customer">Cliente</label>
                     <select id="customer" class="form-control" name="customer">
@@ -50,7 +50,7 @@
                     </tbody>
                 </table>
 
-                <!-- Tabela de Itens da Venda -->
+
                 <table class="table">
                     <thead>
                         <tr>
@@ -62,22 +62,21 @@
                         </tr>
                     </thead>
                     <tbody id="sale-items">
-                        <!-- Itens serão adicionados aqui -->
                     </tbody>
                 </table>
 
-                <!-- Botão Salvar Venda -->
+
                 <button type="button" id="save-sale" class="btn btn-success">Salvar Venda</button>
             </section>
 
-            <!-- Seção de Pagamento -->
+
             <section id="payment">
-                <!-- Botão Editar Venda -->
+
                 <button type="button" id="edit-sale" class="btn btn-warning" style="display: none;">Editar Venda</button>
-                <!-- Exibe o total -->
+
                 <div class="form-group">
                     <label for="total-price">Subtotal Total: </label>
-                    <span id="total-price">0.00</span> <!-- Aqui será exibido o subtotal total -->
+                    <span id="total-price">0.00</span> 
                 </div>
 
                 <div class="form-group">
@@ -89,7 +88,7 @@
                     </select>
                 </div>
 
-                <!-- Tabela de Pagamento à Vista (inicialmente escondida) -->
+
                 <div id="avista-payment" style="display: none;">
                     <table class="table">
                         <thead>
@@ -107,7 +106,7 @@
                     </table>
                 </div>
 
-                <!-- Seção para Parcelamento (inicialmente escondida) -->
+
                 <div id="parcelado-payment" style="display: none;">
                     <div class="form-group">
                         <label for="num-parcelas">Número de Parcelas</label>
@@ -123,7 +122,7 @@
                             </tr>
                         </thead>
                         <tbody id="parcelas-info">
-                            <!-- Parcelas serão geradas aqui -->
+                            
                         </tbody>
                     </table>
                 </div>
@@ -131,7 +130,7 @@
             </section>
         </form>
 
-        <!-- Modal para Cadastro de Cliente -->
+     
         <div class="modal fade" id="customerModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -160,7 +159,7 @@
             </div>
         </div>
 
-        <!-- Modal para Cadastro de Produto -->
+      
         <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -196,27 +195,27 @@
     <script>
         $(document).ready(function() {
 
-            // Carregar clientes na inicialização
+      
             loadCustomers();
             loadProducts();
 
             function loadCustomers() {
                 $.ajax({
-                    url: "{{ route('customers.index') }}", // Substitua com a rota que retorna a lista de clientes
+                    url: "{{ route('customers.index') }}", 
                     method: 'GET',
                     success: function(response) {
                         var $select = $('#customer');
-                        $select.empty(); // Limpar opções existentes
+                        $select.empty(); 
                         $select.append('<option value="">Escolha um Cliente</option>');
 
-                        // Adiciona os clientes ao select
+                        
                         $.each(response.customers, function(index, customer) {
                             var option = $('<option>', {
                                 value: customer.id,
                                 text: customer.name
                             });
 
-                            // Atribui o CPF usando .data()
+                            
                             option.data('cpf', customer.cpf);
                             $select.append(option);
                         });
@@ -229,21 +228,21 @@
 
             function loadProducts() {
                 $.ajax({
-                    url: "{{ route('products.index') }}", // Rota para buscar produtos
+                    url: "{{ route('products.index') }}", 
                     method: 'GET',
                     success: function(response) {
                         var $select = $('#products');
-                        $select.empty(); // Limpar opções existentes
-                        $select.append('<option value="">Escolha um produto...</option>'); // Adiciona opção padrão
+                        $select.empty(); 
+                        $select.append('<option value="">Escolha um produto...</option>'); 
 
-                        // Adiciona os produtos ao select
+                    
                         $.each(response.products, function(index, product) {
                             var option = $('<option>', {
                                 value: product.id,
                                 text: product.name
                             });
 
-                            // Atribui o preço usando .data()
+                        
                             option.data('price', product.unit_price);
                             $select.append(option);
                         });
@@ -254,14 +253,13 @@
                 });
             }
 
-            // Ao selecionar um cliente, adicionar à tabela
+      
             $('#customer').on('change', function() {
                 var selectedCustomer = $(this).find(':selected');
                 var customerId = selectedCustomer.val();
                 var customerName = selectedCustomer.text();
-                var customerCPF = selectedCustomer.data('cpf'); // Recupera o CPF do cliente
+                var customerCPF = selectedCustomer.data('cpf');
 
-                // Se houver um cliente selecionado, adiciona à tabela
                 if (customerId) {
                     addCustomerToTable(customerId, customerName, customerCPF);
                 }
@@ -270,13 +268,12 @@
             function addCustomerToTable(customerId, customerName, customerCPF) {
                 var $customerInfoTable = $('#customer-info');
 
-                // Verificar se já existe um cliente na tabela
                 if ($customerInfoTable.find('tr').length > 0) {
                     alert('Apenas um cliente pode ser adicionado por pedido.');
                     return;
                 }
 
-                // HTML da nova linha da tabela
+
                 var newRow = `
         <tr data-customer-id="${customerId}">
             <td>${customerName}</td>
@@ -284,24 +281,21 @@
             <td><button class="btn btn-danger remove-item">Remover Cliente</button></td>
         </tr>
     `;
-
-                // Adiciona a nova linha à tabela
                 $customerInfoTable.append(newRow);
             }
 
-            // Função para remover cliente da tabela
+
             $('#customer-info').on('click', '.remove-item', function() {
                 $(this).closest('tr').remove();
             });
 
-            // Ao selecionar um produto, adicionar à tabela
+
             $('#products').on('change', function() {
                 var selectedProduct = $(this).find(':selected');
                 var productId = selectedProduct.val();
                 var productName = selectedProduct.text();
                 var productPrice = selectedProduct.data('price'); // Recupera o preço correto
 
-                // Se houver um produto selecionado, adiciona à tabela
                 if (productId) {
                     addProductToTable(productId, productName, productPrice);
                 }
@@ -310,13 +304,13 @@
             function addProductToTable(productId, productName, productPrice) {
                 var $saleItems = $('#sale-items');
 
-                // Verificar se o produto já foi adicionado à tabela
+
                 if ($saleItems.find('tr[data-product-id="' + productId + '"]').length > 0) {
                     alert('Este produto já foi adicionado.');
                     return;
                 }
 
-                // HTML da nova linha da tabela
+
                 var newRow = `
         <tr data-product-id="${productId}">
             <td>${productName}</td>
@@ -365,9 +359,9 @@
                     data: $(this).serialize(),
                     success: function(response) {
                         $('#clientMessage').html('<div class="alert alert-success">Cliente cadastrado com sucesso!</div>');
-                        // Opcional: atualizar lista de clientes na página ou no modal
+
                         $('#clientModal').modal('hide');
-                        // Limpar formulário
+
                         $('#clientForm')[0].reset();
 
                         setTimeout(function() {
@@ -410,9 +404,9 @@
     <script>
         $(document).ready(function() {
             $('#payment').hide();
-            // Quando o botão Salvar Venda for clicado
+
             $('#save-sale').on('click', function() {
-                // Desabilitar os campos de cliente, produtos e tabelas
+
                 $('#customer').prop('disabled', true);
                 $('#products').prop('disabled', true);
                 $('#customerModal').prop('disabled', true);
@@ -420,17 +414,15 @@
                 $('#customer-info input, #customer-info button').prop('disabled', true);
                 $('#sale-items input, #sale-items button').prop('disabled', true);
 
-                // Mostrar botão de editar venda e esconder botão de salvar venda
                 $('#edit-sale').show();
                 $('#save-sale').hide();
 
-                // Mostrar a seção de pagamento e habilitar os campos de pagamento
                 $('#payment').show();
             });
 
-            // Quando o botão Editar Venda for clicado
+
             $('#edit-sale').on('click', function() {
-                // Habilitar os campos de cliente, produtos e tabelas
+
                 $('#customer').prop('disabled', false);
                 $('#products').prop('disabled', false);
                 $('#customerModal').prop('disabled', false);
@@ -438,15 +430,15 @@
                 $('#customer-info input, #customer-info button').prop('disabled', false);
                 $('#sale-items input, #sale-items button').prop('disabled', false);
 
-                // Mostrar botão de salvar venda e esconder botão de editar venda
+
                 $('#save-sale').show();
                 $('#edit-sale').hide();
 
-                // Esconder a seção de pagamento
+
                 $('#payment').hide();
             });
 
-            // Quando o tipo de pagamento for alterado
+
             $('#payment-type').on('change', function() {
                 var paymentType = $(this).val();
 
@@ -484,13 +476,13 @@
             // Atualiza o subtotal total na seção de pagamento parcelado
             $('#total-price').text(total);
 
-            // Função para atualizar os valores das parcelas
+ 
             function updateParcelaValues() {
                 var totalParcelaSum = 0;
                 var parcelas = $('#parcelas-info tr');
                 var numParcelas = parcelas.length;
 
-                // Calcula a soma dos valores das parcelas, exceto a última
+   
                 parcelas.each(function(index, row) {
                     if (index < numParcelas - 1) {
                         var $valorInput = $(row).find('.valor-parcela');
@@ -506,7 +498,7 @@
                 }
             }
 
-            // Quando o tipo de pagamento for alterado
+
             $('#payment-type').on('change', function() {
                 var paymentType = $(this).val();
 
@@ -531,7 +523,7 @@
                 }
             });
 
-            // Quando o número de parcelas for alterado
+
             $('#num-parcelas').on('change', function() {
                 numParcelas = parseInt($(this).val());
                 var $parcelasInfo = $('#parcelas-info');
